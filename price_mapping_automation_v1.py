@@ -60,7 +60,15 @@ class PBmapper():
         for index, row in company_df.iterrows():
             sspart_no = row["Supplier_part_number"]
             company_df.loc[index, "Stripped_supplier_PN"] = re.sub(r'[^a-zA-Z0-9\s]', "", sspart_no)
-        
+            
+            # computing P1 price for already existing pricing
+            if ((company_df.loc[index, "Cost"] / 0.65) * 2) < company_df.loc[index, "List price"]:
+                company_df.loc[index, "P1"] = round(company_df.loc[index, "List price"], 2)
+
+            else:
+                company_df.loc[index, "P1"] = round((company_df.loc[index, "Cost"] / 0.65) * 2, 2)
+
+
         for index, row in pricing_df.iterrows():
             pricing_df.loc[index, "Stripped_supplier_PN"] = re.sub(r'[^a-zA-Z0-9\s]', "", row["Supplier_part_number"])
 
@@ -92,7 +100,16 @@ class PBmapper():
                 company_df.loc[index, "On_latest_vendorprice_book"] = "Yes"
                 company_df.loc[index, "Cost_on_vendors_PB"] = round(matched_item["Cost"].iloc[0], 2)
                 company_df.loc[index, "Listprice_on_vendors_PB"] = round(matched_item["List price"].iloc[0], 2)
-                company_df.loc[index, "P1_vendorsPB"] = round((matched_item["Cost"].iloc[0] / 0.65) * 2, 2)
+
+                # computing P1 comparison (vendor) pricing
+                p1_vendor = round((matched_item["Cost_on_vendors_PB"].iloc[0] / 0.65) * 2, 2)
+
+                if p1_vendor < round(company_df.loc[index, "Listprice_on_vendors_PB"], 2):
+                    company_df.loc[index, "P1_vendorsPB"] = round(company_df.loc[index, "Listprice_on_vendors_PB"], 2)
+                else:
+                    company_df.loc[index, "P1_vendorsPB"] = p1_vendor
+
+                
                 company_df.loc[index, "Cost_check"] = "Matching" if row["Cost"] == company_df.loc[index, "Cost_on_vendors_PB"] else "Not matching"
                 company_df.loc[index, "P1_check"] = "Matching" if row["P1"] == company_df.loc[index, "P1_vendorsPB"] else "Not matching"
                 company_df.loc[index, "Listprice_check"] = "Matching" if row["List price"] == company_df.loc[index, "Listprice_on_vendors_PB"] else "Not matching"
