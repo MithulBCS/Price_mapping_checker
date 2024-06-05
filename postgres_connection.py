@@ -2,6 +2,7 @@ import psycopg2
 import logging
 from datetime import datetime
 import os
+import pandas as pd
 
 current_time = datetime.now()
 fcurrent_time = current_time.strftime("%Y-%m-%d-%H-%M-%S")
@@ -29,7 +30,14 @@ def connect_to_postgres(dbname, user, password, host, port):
 
 
 def read_data_into_table(connection, company_df):
+    # replace the company_df with P21_folder
 
+    """
+    # read the folder and the files in it
+    for i in P21_folder:
+        company_df = pd.read_excel(i)
+    """
+    
     # filter only the discrepancy ones
     df = company_df[company_df["Matched_pricingdoc_SPN"] == "Not available"]
     

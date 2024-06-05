@@ -32,6 +32,19 @@ def main(company_path, pricing_path):
     mapper = pmauto.PBmapper()
     company_df, pricing_df, folder_path = mapper.main(company_path, pricing_path, company_prefix_name)
 
+    """v2
+
+    parser = argparse.ArgumentParser(description= "Mapping company and pricing files")
+    parser.add_argument("--folder_path", help="Give the master folder path")
+    parser.add_argument("--company_json_path", help= "Give the finished list of companies json file path")
+    args = parser.parse_args()
+
+    mapper = pmauto.PBmapper()
+    P21_files = mapper.main(folder_path, company_json)
+    """
+
+    """ Not needed for v2 automation
+
     current_time = datetime.now()
     fcurrent_time = current_time.strftime("%Y-%m-%d-%H-%M-%S")
 
@@ -41,6 +54,7 @@ def main(company_path, pricing_path):
     logging.info("Files are saved in the located folder.")
     logging.info(f"Files of {company_prefix_name} successfully processed and saved")
 
+"""
 
     current_time = datetime.now()
     day = current_time.day

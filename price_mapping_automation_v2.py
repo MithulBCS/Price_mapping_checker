@@ -222,6 +222,9 @@ class PBmapper():
         folder_prefixes = mapperOB.get_prefixes(folder_path)
         company_folders_paths = mapperOB.get_company_folders(folder_prefixes, folder_path, company_json_path) 
 
+        # for saving all the processed company folders
+        P21_files = []
+
         # get into each of the folder and read the files
         for company in company_folders_paths:
             company_path, pricing_path, company_prefix_name = mapperOB.read_folder(company)
@@ -268,7 +271,20 @@ class PBmapper():
             logging.info(f"The folder for saving the file is found as : {folder_path}")
 
             logging.info("Files are processed.")
-            return company_files, pricing_files, folder_path, company_prefix_name
+
+
+            current_time = datetime.now()
+            fcurrent_time = current_time.strftime("%Y-%m-%d-%H-%M-%S")
+
+            company_df.to_excel(f"{folder_path}\\{company_prefix_name}_review_{fcurrent_time}.xlsx", index = False, engine='openpyxl')
+            pricing_df.to_excel(f"{folder_path}\\{company_prefix_name}_pricing_{fcurrent_time}.xlsx", index = False, engine='openpyxl')
+
+            P21_files.append(f"{folder_path}\\{company_prefix_name}_review_{fcurrent_time}.xlsx")
+
+            logging.info("Files are saved in the located folder.")
+            logging.info(f"Files of {company_prefix_name} successfully processed and saved")
+            
+            return P21_files
 
 
 if __name__ == "__main__":
@@ -285,11 +301,4 @@ if __name__ == "__main__":
     mapper = PBmapper()
     company_df, pricing_df, folder_path, company_prefix_name = mapper.main(folder_path, company_json_path)
 
-    current_time = datetime.now()
-    fcurrent_time = current_time.strftime("%Y-%m-%d-%H-%M-%S")
 
-    company_df.to_excel(f"{folder_path}\\{company_prefix_name}_review_{fcurrent_time}.xlsx", index = False, engine='openpyxl')
-    pricing_df.to_excel(f"{folder_path}\\{company_prefix_name}_pricing_{fcurrent_time}.xlsx", index = False, engine='openpyxl')
-
-    logging.info("Files are saved in the located folder.")
-    logging.info(f"Files of {company_prefix_name} successfully processed and saved")

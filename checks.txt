@@ -1,0 +1,7 @@
+
+## for the automation scope
+item_id stripped = supplier part number stripped
+supplier part number = short code
+item_id should have a prefix
+
+remove the prefix, special characters from item_id match the stripped Supplier part number  
