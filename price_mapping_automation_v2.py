@@ -178,7 +178,8 @@ class PBmapper():
                 company_df.loc[index, "P1_check"] = "Matching" if row["P1"] == company_df.loc[index, "P1_vendorsPB"] else "Not matching"
                 company_df.loc[index, "Listprice_check"] = "Matching" if row["List price"] == company_df.loc[index, "Listprice_on_vendors_PB"] else "Not matching"
                 
-                
+
+            # these are for N/A rows
             else:
                 company_df.loc[index, "Matched_pricingdoc_SPN"] = "Not available"
                 company_df.loc[index, "On_latest_vendorprice_book"] = "No"
@@ -195,18 +196,20 @@ class PBmapper():
             sspart_no = r["Stripped_supplier_PN"]
 
             matched_item = company_df[company_df["Stripped_supplier_PN"] == sspart_no]
-            #print(matched_item["on_vendor_price_book"])
+            
+            # get the supplier part number matched rows
             if not matched_item.empty:
                 vendorPBmatch = matched_item["on_vendor_price_book"].iloc[0]
 
                 pricing_df.loc[i, "Matched_companydoc_SPN"] = matched_item["Stripped_supplier_PN"].iloc[0]
+                
 
+                # match the on_vendor_price_book on review file to prcing file
                 if pd.isna(vendorPBmatch) or vendorPBmatch == "":
                     pricing_df.loc[i, "on_vendor_price_book"] = "No data avaiable"
-                    print("Taken: "+vendorPBmatch)
+                    
                 else:
-                    #print("Matched: "+matched_item["on_vendor_price_book"])
-                    #print("Taken: "+vendorPBmatch)
+                    
                     pricing_df.loc[i, "on_vendor_price_book"] = str(vendorPBmatch)
 
             else:
@@ -217,6 +220,7 @@ class PBmapper():
         return company_df, pricing_df
 
 
+    # Calls and utilizes all the other functions
     def main(self, folder_path, company_json_path):
 
         mapperOB = PBmapper()  
@@ -232,6 +236,7 @@ class PBmapper():
         for company in company_folders_paths:
             company_path, pricing_path, company_prefix_name = mapperOB.read_folder(company)
 
+            # read the files from the folder, and process it
             company_files, pricing_files = mapperOB.read_files(company_path, pricing_path)
             company_files, pricing_files = mapperOB.column_initiator(company_files, pricing_files)
             company_files, pricing_files = mapperOB.modifier(company_files, pricing_files)
@@ -279,8 +284,9 @@ class PBmapper():
             current_time = datetime.now()
             fcurrent_time = current_time.strftime("%Y-%m-%d-%H-%M-%S")
 
-            company_df.to_excel(f"{folder_path}\\{company_prefix_name}_review_{fcurrent_time}.xlsx", index = False, engine='openpyxl')
-            pricing_df.to_excel(f"{folder_path}\\{company_prefix_name}_pricing_{fcurrent_time}.xlsx", index = False, engine='openpyxl')
+            # save the files in excel format
+            company_files.to_excel(f"{folder_path}\\{company_prefix_name}_review_{fcurrent_time}.xlsx", index = False, engine='openpyxl')
+            pricing_files.to_excel(f"{folder_path}\\{company_prefix_name}_pricing_{fcurrent_time}.xlsx", index = False, engine='openpyxl')
 
             P21_files.append(f"{folder_path}\\{company_prefix_name}_review_{fcurrent_time}.xlsx")
 
@@ -315,6 +321,6 @@ if __name__ == "__main__":
     company_json_path = args.company_json_path
 
     mapper = PBmapper()
-    company_df, pricing_df, folder_path, company_prefix_name = mapper.main(folder_path, company_json_path)
+    P21_files = mapper.main(folder_path, company_json_path)
 
 

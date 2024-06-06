@@ -5,3 +5,13 @@ supplier part number = short code
 item_id should have a prefix
 
 remove the prefix, special characters from item_id match the stripped Supplier part number  
+
+
+18-12-2024 discussion:
+
+- once a week - friday /saturday
+- check the latest pricebook 
+- refresh the p21 (excel)
+- generate queries
+- should exclude certain 
+
