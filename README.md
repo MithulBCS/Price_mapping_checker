@@ -17,7 +17,7 @@ There are two files given:
 
  
 <br> 
-  
+------------------------------------------------------------------------------------------------
 <br> 
 
 ```
@@ -27,4 +27,9 @@ python price_mapping_automation_v2.py --folder_path "" --company_json_path ""
 
 This is for the v2 automation script. 
 
+The two files:
+- folder_path
+- company_json_path
+
+<br>
 Execute this script with the master folder path (the folder has company specific folders inside which there are pricing and review files) and the json file having the finished list of companies.
