@@ -1,12 +1,14 @@
 For inputs in powershell command
 
+
+#### Explanation v1:
+
 ```
 python price_mapping_automation_v0.py --company_file_path "" --pricing_file_path ""
 
 ```
 <br> 
 
-#### Explanation:
 
 There are two files given:
 - Company file
@@ -21,7 +23,7 @@ There are two files given:
 <br> 
 
 
-##### Explanation:
+#### Explanation v2:
 
 ```
 python price_mapping_automation_v2.py --folder_path "" --company_json_path ""
