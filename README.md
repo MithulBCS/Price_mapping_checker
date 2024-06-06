@@ -14,3 +14,14 @@ There are two files given:
 
  Variables such as cost, P1, list price are mapped and compared within each of the file.
  The data is identified and linked using "Supplier_part_no"
+
+<br> 
+<br> 
+
+```
+python price_mapping_automation_v2.py --folder_path "" --company_json_path ""
+
+```
+
+This is for the v2 automation script. 
+Execute this script with the master folder path (the folder has company specific folders inside which there are pricing and review files) and the json file having the finished list of companies.
