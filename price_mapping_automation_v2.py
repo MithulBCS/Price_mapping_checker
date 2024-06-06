@@ -75,7 +75,18 @@ class PBmapper():
 
         return company_df, pricing_df
     
-    
+
+    # get the prefix of the companies
+    def get_prefixes(self, folder_path):
+        folder_prefixes = []
+
+        for folder in os.listdir(folder_path):
+            if os.path.isdir(os.path.join(folder_path, folder)):
+                folder_prefixes.append(folder[:3])
+
+        return folder_prefixes
+
+
     # get the companies that needs to be read
     def get_company_folders(self, folder_prefixes, folder_path, company_json_file):
         
@@ -88,7 +99,7 @@ class PBmapper():
 
             # get the prefixes of all the companies the needs to be automated
             if folder not in data:
-                company_prefixes.append(folder)
+                company_prefixes.append(folder[:3])
 
 
         # get the folder paths of all the companies the needs to be automated
@@ -102,16 +113,6 @@ class PBmapper():
                 folder_paths.append(company)
 
         return folder_paths
-
-    # get the prefix of the companies
-    def get_prefixes(self, folder_path):
-        folder_prefixes = []
-
-        for folder in os.listdir(folder_path):
-            if os.path.isdir(os.path.join(folder_path, folder)):
-                folder_prefixes.append(folder[:3])
-
-        return folder_prefixes
 
 
     # read the folder and return the file paths
@@ -219,11 +220,13 @@ class PBmapper():
     def main(self, folder_path, company_json_path):
 
         mapperOB = PBmapper()  
-        folder_prefixes = mapperOB.get_prefixes(folder_path)
-        company_folders_paths = mapperOB.get_company_folders(folder_prefixes, folder_path, company_json_path) 
+        folder_prefixes = mapperOB.get_prefixes(folder_path) # Will return the three letters of the input folders
+        company_folders_paths = mapperOB.get_company_folders(folder_prefixes, folder_path, company_json_path)   # Will return the folder paths of the companies that needs to be mapped
 
         # for saving all the processed company folders
         P21_files = []
+
+        
 
         # get into each of the folder and read the files
         for company in company_folders_paths:
@@ -281,10 +284,23 @@ class PBmapper():
 
             P21_files.append(f"{folder_path}\\{company_prefix_name}_review_{fcurrent_time}.xlsx")
 
+            
+            # include the prefixes in list of the companies file
+            c_name = os.path.basename(company)
+            finished_prefix = c_name[:3]
+
+
             logging.info("Files are saved in the located folder.")
             logging.info(f"Files of {company_prefix_name} successfully processed and saved")
-            
-            return P21_files
+        
+
+        # write the finished company prefix to the finished company json file
+        with open(company_json_path, "r+") as cjs:
+            prefix_data = cjs.load
+            prefix_data.append(finished_prefix)     
+
+
+        return P21_files
 
 
 if __name__ == "__main__":
