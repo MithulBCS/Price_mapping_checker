@@ -17,8 +17,11 @@ There are two files given:
 
  
 <br> 
-------------------------------------------------------------------------------------------------
+ 
 <br> 
+
+
+##### Explanation:
 
 ```
 python price_mapping_automation_v2.py --folder_path "" --company_json_path ""
