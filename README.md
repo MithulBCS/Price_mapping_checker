@@ -28,7 +28,7 @@ There are two files given:
 #### Explanation v2:
 
 ```
-python price_mapping_automation_v2.py --folder_path "" --company_json_path ""
+python price_mapping_automation_v2.py --folder_path "" --company_json_path "" --new_loop ""
 
 ```
 

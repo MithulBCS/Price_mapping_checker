@@ -37,13 +37,30 @@ def main(company_path, pricing_path):
     parser = argparse.ArgumentParser(description= "Mapping company and pricing files")
     parser.add_argument("--folder_path", help="Give the master folder path")
     parser.add_argument("--company_json_path", help= "Give the finished list of companies json file path")
+    parser.add_argument("--new_loop", help= "Say if it is a new loop or a loop from middle")
     args = parser.parse_args()
 
+    folder_path = args.folder_path
+    company_json_path = args.company_json_path
+    new_loop_check = args.new_loop
+
+    if new_loop_check == "yes":
+        with open(company_json_path, "w") as cjs:
+            data = {"Prefixes" : []}
+            json.dump(data, cjs, indent=4)
+
+    elif new_loop_check == "no":
+        continue
+    
+    else:
+        raise ValueError("Automation information not given!!")
+    
     mapper = pmauto.PBmapper()
-    P21_files = mapper.main(folder_path, company_json)
+    P21_files = mapper.main(folder_path, company_json_path)
+   
     """
 
-    """ Not needed for v2 automation
+    ### Not needed when running v2 automation
 
     current_time = datetime.now()
     fcurrent_time = current_time.strftime("%Y-%m-%d-%H-%M-%S")
@@ -54,7 +71,7 @@ def main(company_path, pricing_path):
     logging.info("Files are saved in the located folder.")
     logging.info(f"Files of {company_prefix_name} successfully processed and saved")
 
-"""
+    ### till here
 
     current_time = datetime.now()
     day = current_time.day

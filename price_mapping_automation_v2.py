@@ -300,11 +300,18 @@ class PBmapper():
             logging.info(f"Files of {company_prefix_name} successfully processed and saved")
         
 
-        # write the finished company prefix to the finished company json file
-        with open(company_json_path, "r+") as cjs:
-            prefix_data = cjs.load
-            prefix_data.append(finished_prefix)     
+            # write the finished company prefix to the finished company json file
+            # read the content
+            with open(company_json_path, "r+") as cjs:
+                prefix_file = json.load(cjs)
+                prefix_data = prefix_file["Prefixes"]
 
+            # append the prefix to the already existing list
+            prefix_data.append(finished_prefix)     
+            
+            # write the content back
+            with open(company_json_path, "w") as cjs:
+                json.dump(prefix_data, cjs, indent=4)
 
         return P21_files
 
