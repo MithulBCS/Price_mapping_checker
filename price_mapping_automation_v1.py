@@ -79,9 +79,12 @@ class PBmapper():
     @staticmethod
     def matching_logic(company_df, pricing_df, company_prefix):
 
-        # iterring over company df
+         # iterring over company df
         for index, row in company_df.iterrows():
             sspart_no = row["Stripped_supplier_PN"]
+
+            # initiating discrepany list
+            discrepancy_type = []
 
             # check the prefix
             for prefix, company_name in PBmapper.prefix_name.items():
@@ -92,6 +95,11 @@ class PBmapper():
                         company_df.loc[index, "Prefix_check"] = "Other company prefix"
                 else:
                     company_df.loc[index, "Prefix_check"] = "No prefix"
+
+            
+            # Company prefix in the company prefix column
+            company_df.loc[index, "Prefix_of_company"] = company_prefix
+
 
             # check for the match
             matched_item = pricing_df[pricing_df["Stripped_supplier_PN"] == sspart_no]
@@ -114,7 +122,26 @@ class PBmapper():
                 company_df.loc[index, "P1_check"] = "Matching" if row["P1"] == company_df.loc[index, "P1_vendorsPB"] else "Not matching"
                 company_df.loc[index, "Listprice_check"] = "Matching" if row["List price"] == company_df.loc[index, "Listprice_on_vendors_PB"] else "Not matching"
                 
+                # this is to check if the mismatch column
+                onvpb = company_df.loc[index, "on_vendor_price_book"]
+                onlpb = company_df.loc[index, "On_latest_vendorprice_book"]
                 
+                if onvpb:
+                    if onvpb == "N":
+                        if onlpb == "No":
+                            company_df.loc[index, "Mismatch_check"] = "Matching"
+                        else:
+                            company_df.loc[index, "Mismatch_check"] = "Not matching"
+                    elif onvpb == "Y":
+                        if onlpb == "Yes":
+                            company_df.loc[index, "Mismatch_check"] = "Matching"
+                        else:
+                            company_df.loc[index, "Mismatch_check"] = "Not matching"
+
+                else:
+                    company_df.loc[index, "Mismatch_check"] = "No data available"
+
+            # these are for N/A rows
             else:
                 company_df.loc[index, "Matched_pricingdoc_SPN"] = "Not available"
                 company_df.loc[index, "On_latest_vendorprice_book"] = "No"
@@ -126,23 +153,46 @@ class PBmapper():
                 company_df.loc[index, "Listprice_check"] = "Not available"
 
 
+            # recording the discrepany column
+            if company_df.loc[index, "Matched_pricingdoc_SPN"] == "Not available":
+                discrepancy_type.append("Matching SPN")
+            elif company_df.loc[index, "Cost_check"] == "Not matching":
+                discrepancy_type.append("Cost match")
+            elif company_df.loc[index, "Listprice_check"] == "Not matching":
+                discrepancy_type.append("list price match")
+            elif company_df.loc[index, "P1_check"] == "Not matching":
+                discrepancy_type.append("P1 match")
+            elif company_df.loc[index, "Mismatch_check"] == "Not matching" :
+                discrepancy_type.append("checkers Mismatch")
+            else:
+                discrepancy_type.append("All right")
+
+            # discrepancy types joined as a single string
+            discrepancy_col = ", ".join(map(str, discrepancy_type))
+
+            # imputing the discrepancy column with the string
+            company_df.loc[index, "Discrepancy_type"] = discrepancy_col
+
+
         # ittering over pricing rows
         for i, r in pricing_df.iterrows():
             sspart_no = r["Stripped_supplier_PN"]
 
             matched_item = company_df[company_df["Stripped_supplier_PN"] == sspart_no]
-            #print(matched_item["on_vendor_price_book"])
+            
+            # get the supplier part number matched rows
             if not matched_item.empty:
                 vendorPBmatch = matched_item["on_vendor_price_book"].iloc[0]
 
                 pricing_df.loc[i, "Matched_companydoc_SPN"] = matched_item["Stripped_supplier_PN"].iloc[0]
+                
 
+                # match the on_vendor_price_book on review file to prcing file
                 if pd.isna(vendorPBmatch) or vendorPBmatch == "":
                     pricing_df.loc[i, "on_vendor_price_book"] = "No data avaiable"
-                    print("Taken: "+vendorPBmatch)
+                    
                 else:
-                    #print("Matched: "+matched_item["on_vendor_price_book"])
-                    #print("Taken: "+vendorPBmatch)
+                    
                     pricing_df.loc[i, "on_vendor_price_book"] = str(vendorPBmatch)
 
             else:
@@ -151,6 +201,7 @@ class PBmapper():
 
         logging.info("Files are processed and sent to the main function")
         return company_df, pricing_df
+
 
 
     def main(self, company_path, pricing_path, company_prefix_name):
