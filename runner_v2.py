@@ -43,7 +43,7 @@ def main(folder_path, company_json_patj):
 
     # database table name and output file name
     table_name = "P21_companyreview"
-    output_file = f"Price matching report {day}-{month}-{year}"
+    output_file = f"D:\\Discrepancy files\\Price matching report {day}-{month}-{year}"
 
 
     conn = pgs.connect_to_postgres(dbname, user, password, host, port)

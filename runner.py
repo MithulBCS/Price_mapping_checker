@@ -21,7 +21,7 @@ year = current_time.year
 
 
 table_name = "P21_companyreview"  # Replace with the actual table name
-output_file = f"Price_matching_report_{day}_{month}_{year}.csv"  # Replace with the dedicated file path 
+output_file = f"D:\\Discrepancy files\\Price_matching_report_{day}_{month}_{year}.csv"  # Replace with the dedicated file path 
 
 
 def main(company_path, pricing_path):

@@ -40,7 +40,7 @@ class PBmapper():
         company_df["On_latest_vendorprice_book"]  = ""
         company_df["Mismatch_check"] = ""
         company_df["Cost_on_vendors_PB"] = ""
-        company_df["P1_vendorsPB"] = ""
+        company_df["P1_vendors_PB"] = ""
         company_df["Listprice_on_vendors_PB"] = ""
         company_df["Cost_check"] = ""
         company_df["P1_check"] = ""
@@ -179,13 +179,13 @@ class PBmapper():
                 p1_vendor = round((matched_item["Cost_on_vendors_PB"].iloc[0] / 0.65) * 2, 2)
 
                 if p1_vendor < round(company_df.loc[index, "Listprice_on_vendors_PB"], 2):
-                    company_df.loc[index, "P1_vendorsPB"] = round(company_df.loc[index, "Listprice_on_vendors_PB"], 2)
+                    company_df.loc[index, "P1_vendors_PB"] = round(company_df.loc[index, "Listprice_on_vendors_PB"], 2)
                 else:
-                    company_df.loc[index, "P1_vendorsPB"] = p1_vendor
+                    company_df.loc[index, "P1_vendors_PB"] = p1_vendor
 
                 
                 company_df.loc[index, "Cost_check"] = "Matching" if row["Cost"] == company_df.loc[index, "Cost_on_vendors_PB"] else "Not matching"
-                company_df.loc[index, "P1_check"] = "Matching" if row["P1"] == company_df.loc[index, "P1_vendorsPB"] else "Not matching"
+                company_df.loc[index, "P1_check"] = "Matching" if row["P1"] == company_df.loc[index, "P1_vendors_PB"] else "Not matching"
                 company_df.loc[index, "Listprice_check"] = "Matching" if row["List price"] == company_df.loc[index, "Listprice_on_vendors_PB"] else "Not matching"
                 
                 # this is to check if the mismatch column
@@ -213,7 +213,7 @@ class PBmapper():
                 company_df.loc[index, "On_latest_vendorprice_book"] = "No"
                 company_df.loc[index, "Cost_on_vendors_PB"] = "Not available"
                 company_df.loc[index, "Listprice_on_vendors_PB"] = "Not available"
-                company_df.loc[index, "P1_vendorsPB"] = "Not available"
+                company_df.loc[index, "P1_vendors_PB"] = "Not available"
                 company_df.loc[index, "Cost_check"] = "Not available"
                 company_df.loc[index, "P1_check"] = "Not available"
                 company_df.loc[index, "Listprice_check"] = "Not available"
