@@ -56,9 +56,9 @@ def main(folder_path, company_json_patj):
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description= "Mapping company and pricing files")
-    parser.add_argument("--folder_path", help="Give the master folder path")
-    parser.add_argument("--company_json_path", help= "Give the finished list of companies json file path")
-    parser.add_argument("--new_loop", help= "Say if it is a new loop or a loop from middle")
+    parser.add_argument("--folder_path", help="Give the master folder path", required=True)
+    parser.add_argument("--company_json_path", help= "Give the finished list of companies json file path", required=True)
+    parser.add_argument("--new_loop", help= "Say if it is a new loop or a loop from middle", required= True)
     args = parser.parse_args()
 
     folder_path = args.folder_path
