@@ -15,3 +15,9 @@ remove the prefix, special characters from item_id match the stripped Supplier p
 - generate queries
 - should exclude certain 
 
+
+## discussion on checks with new data reports - @ 10-Jun-2024
+- column 8 (current live locations) equal clean locations and should equal the above sumn (J + M) (10, 11, 12)
+- column 13, 14 should be 0 - discrepancy if not
+- column 15, 17, 19 =  1 (= 1)
+- column 16, 18, 20 should match the review file
