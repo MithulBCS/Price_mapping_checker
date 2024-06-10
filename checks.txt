@@ -7,6 +7,7 @@ item_id should have a prefix
 remove the prefix, special characters from item_id match the stripped Supplier part number  
 
 
+
 18-12-2024 discussion:
 
 - once a week - friday /saturday
@@ -14,6 +15,7 @@ remove the prefix, special characters from item_id match the stripped Supplier p
 - refresh the p21 (excel)
 - generate queries
 - should exclude certain 
+
 
 
 ## discussion on checks with new data reports - @ 10-Jun-2024
