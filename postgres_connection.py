@@ -29,18 +29,22 @@ def connect_to_postgres(dbname, user, password, host, port):
         return None
 
 
-def read_data_into_table(connection, company_df):
+def read_data_into_table(connection, P21_files):
     # replace the company_df with P21_folder
 
-    """
+    main_df = pd.DataFrame() 
+
     # read the folder and the files in it
-    for i in P21_folder:
+    for i in P21_files:
         company_df = pd.read_excel(i)
-    """
-    
-    # filter only the discrepancy ones
-    df = company_df[company_df["Matched_pricingdoc_SPN"] == "Not available"]
-    
+        
+        # filter only the discrepancy ones
+        df = company_df[company_df["Matched_pricingdoc_SPN"] == "Not available"]
+        
+        # save only the discrepancies in this df and concat the main df
+        main_df = pd.concat(main_df, df)
+
+
     cursor = connection.cursor()
 
     for index, row in df.iterrows():
@@ -65,6 +69,8 @@ def export_table_to_csv(connection, table_name, output_file):
     except psycopg2.Error as e:
         logging.error(f"Error exporting data from table '{table_name}' to CSV file")
         logging.error(e)
+
+        raise ValueError(e)
 
 
 
