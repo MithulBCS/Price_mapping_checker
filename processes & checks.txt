@@ -27,3 +27,4 @@ remove the prefix, special characters from item_id match the stripped Supplier p
 
 ## full data checks
 - on_vendor_price_book
+- save correct ones in Separate database

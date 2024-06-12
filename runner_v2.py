@@ -8,6 +8,9 @@ import os
 import json
 
 
+# include the smtp for mailing
+
+
 dbname = 'BCS_items'
 user = 'postgres'
 password = 'post@BCS'
@@ -72,6 +75,7 @@ if __name__ == "__main__":
     parser.add_argument("--folder_path", help="Give the master folder path", required=True)
     parser.add_argument("--company_json_path", help= "Give the finished list of companies json file path", required=True)
     parser.add_argument("--new_loop", help= "Say if it is a new loop or a loop from middle", required= True)
+    parser.add_argument("--mail", help= "Say if it is a new loop or a loop from middle", required= True)
     args = parser.parse_args()
 
     folder_path = args.folder_path
