@@ -1,0 +1,4 @@
+"Supplier_part_number"
+Separate file for pricing
+Fetch in direct review - P21 database
+Cannot access files from the shared drive

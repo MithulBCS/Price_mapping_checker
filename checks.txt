@@ -23,3 +23,7 @@ remove the prefix, special characters from item_id match the stripped Supplier p
 - column 13, 14 should be 0 - discrepancy if not
 - column 15, 17, 19 =  1 (= 1)
 - column 16, 18, 20 should match the review file
+
+
+## full data checks
+- on_vendor_price_book
