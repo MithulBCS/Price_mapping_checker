@@ -13,7 +13,7 @@ import json
 
 current_time = datetime.now()
 fcurrent_time = current_time.strftime("%Y-%m-%d-%H-%M-%S")
-log_file = os.path.join("D:\\Automation\\Logging_information\\", f"Pricing_automation_{fcurrent_time}")
+log_file = os.path.join("D:\\Price_mapping_Automation\\Logging_information", f"Pricing_automation_{fcurrent_time}")
 logging.basicConfig(filename=log_file, level=logging.DEBUG)
 
 
@@ -29,8 +29,10 @@ class PBmapper():
 
     # function for reading the files
     def read_files(self, company_path, pricing_path):
-        company_df = pd.read_excel(company_path, sheet_name= "worked")
-        pricing_df = pd.read_excel(pricing_path, sheet_name= "worked")
+
+        print(f"This {company_path}, {pricing_path}")
+        company_df = pd.read_excel(company_path, sheet_name= "Worked", engine="openpyxl")
+        pricing_df = pd.read_excel(pricing_path, sheet_name= "Worked",  engine="openpyxl")
         logging.info("Files are read into dataframes")
 
         return company_df, pricing_df
@@ -63,7 +65,10 @@ class PBmapper():
     # needs the spl stripping function as well
     def modifier(self, company_df, pricing_df):
 
+        company_df.reset_index(drop=True, inplace=True)
+        
         for index, row in company_df.iterrows():
+        
             sspart_no = row["Supplier_part_number"]
             company_df.loc[index, "Stripped_supplier_PN"] = re.sub(r'[^a-zA-Z0-9\s]', "", sspart_no)
             
@@ -74,7 +79,9 @@ class PBmapper():
             else:
                 company_df.loc[index, "P1"] = round((company_df.loc[index, "Cost"] / 0.65) * 2, 2)
 
+        pricing_df.reset_index(drop=True, inplace=True)
 
+        print(pricing_df.head())
         for index, row in pricing_df.iterrows():
             pricing_df.loc[index, "Stripped_supplier_PN"] = re.sub(r'[^a-zA-Z0-9\s]', "", row["Supplier_part_number"])
 
@@ -103,7 +110,7 @@ class PBmapper():
         for folder in folder_prefixes:
 
             # get the prefixes of all the companies the needs to be automated
-            if folder not in data:
+            if folder not in data["Prefixes"]:
                 company_prefixes.append(folder[:3])
 
 
@@ -116,23 +123,29 @@ class PBmapper():
             if cur_prefix in company_prefixes:
                 company = os.path.join(folder_path, folder)
                 folder_paths.append(company)
+                print(company)
 
         return folder_paths
 
 
     # read the folder and return the file paths
-    def read_folder(company):
-         
-        for i in os.listdir(company):
-            if os.path.isfile(i):
-                if "P21" in i.upper():
-                    company_review_file = os.path.join(folder_path, i) 
-                
-                elif "PB" in i.upper():
-                    pricing_file = os.path.join(folder_path, i)
+    def read_folder(self, company):
+        
+        company_review_file = ""        
+        pricing_file = ""
+        folder_path = company
 
-                else:
-                    raise ValueError(f"No relevant files in this folder {folder_path}")
+        for i in os.listdir(company):
+            
+
+            if "p21" in i.lower():
+                company_review_file = os.path.join(folder_path, i)
+            
+            elif "pb" in i.lower():
+                pricing_file = os.path.join(folder_path, i)
+                
+            else:
+                raise ValueError(f"No relevant files in this folder {folder_path}")
 
 
         filename = os.path.basename(company)
@@ -141,6 +154,7 @@ class PBmapper():
         cfolder_name = os.path.dirname(company) 
         logging.info(f"Files are taken from the folder : {cfolder_name}")
 
+        
         return company_review_file, pricing_file, company_prefix_name
     
 
@@ -176,10 +190,11 @@ class PBmapper():
                 company_df.loc[index, "Matched_pricingdoc_SPN"] = sspart_no
                 company_df.loc[index, "On_latest_vendorprice_book"] = "Yes"
                 company_df.loc[index, "Cost_on_vendors_PB"] = round(matched_item["Cost"].iloc[0], 2)
+                cost = company_df.loc[index, "Cost_on_vendors_PB"] = round(matched_item["Cost"].iloc[0], 2)
                 company_df.loc[index, "Listprice_on_vendors_PB"] = round(matched_item["List price"].iloc[0], 2)
 
                 # computing P1 comparison (vendor) pricing
-                p1_vendor = round((matched_item["Cost_on_vendors_PB"].iloc[0] / 0.65) * 2, 2)
+                p1_vendor = round((cost / 0.65) * 2, 2)
 
                 if p1_vendor < round(company_df.loc[index, "Listprice_on_vendors_PB"], 2):
                     company_df.loc[index, "P1_vendors_PB"] = round(company_df.loc[index, "Listprice_on_vendors_PB"], 2)
@@ -288,6 +303,7 @@ class PBmapper():
         for company in company_folders_paths:
             company_path, pricing_path, company_prefix_name = mapperOB.read_folder(company)
 
+            print(f"This is the returned from function : {company_path}, {pricing_path}")
             # read the files from the folder, and process it
             company_files, pricing_files = mapperOB.read_files(company_path, pricing_path)
             company_files, pricing_files = mapperOB.column_initiator(company_files, pricing_files)
@@ -355,11 +371,11 @@ class PBmapper():
             # write the finished company prefix to the finished company json file
             # read the content
             with open(company_json_path, "r+") as cjs:
-                prefix_file = json.load(cjs)
-                prefix_data = prefix_file["Prefixes"]
+                prefix_data = json.load(cjs)
+                
 
             # append the prefix to the already existing list
-            prefix_data.append(finished_prefix)     
+            prefix_data["Prefixes"].append(finished_prefix)     
             
             # write the content back
             with open(company_json_path, "w") as cjs:
