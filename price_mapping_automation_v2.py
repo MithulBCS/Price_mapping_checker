@@ -21,7 +21,10 @@ logging.basicConfig(filename=log_file, level=logging.DEBUG)
 # class for this
 class PBmapper():
     prefix_name = {"FND" : "Functional devices", 
-                   "HWT" : "Honeywell thermal solutions"
+                   "HWT" : "Honeywell thermal solutions",
+                   "APF" : "Apollo fire", 
+                   "ALR" : "Alerton",
+                   "75F" : "75F"
                    }
 
     # function for reading the files
@@ -122,10 +125,10 @@ class PBmapper():
          
         for i in os.listdir(company):
             if os.path.isfile(i):
-                if "P21" in i.lower():
+                if "P21" in i.upper():
                     company_review_file = os.path.join(folder_path, i) 
                 
-                elif "price" in i.lower():
+                elif "PB" in i.upper():
                     pricing_file = os.path.join(folder_path, i)
 
                 else:

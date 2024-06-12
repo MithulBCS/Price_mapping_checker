@@ -25,7 +25,7 @@ table_name = "P21_companyreview"  # Replace with the actual table name
 output_file = f"Price_matching_report_{day}_{month}_{year}.csv"  # Replace with the dedicated file path 
 
 
-def main(folder_path, company_json_patj):
+def runner_main(folder_path, company_json_path):
 
     mapper = pmauto.PBmapper()
     P21_files = mapper.main(folder_path, company_json_path)
@@ -74,10 +74,10 @@ if __name__ == "__main__":
         pass
     
     else:
-        raise ValueError("Automation information not given!!")
+        raise ValueError("Automation information (new loop) not given!!")
     
-    mapper = pmauto.PBmapper()
-    P21_files = mapper.main(folder_path, company_json_path)
+    # run the main function
+    runner_main(folder_path, company_json_path)
 
     
 # use subprocess for running the scripts

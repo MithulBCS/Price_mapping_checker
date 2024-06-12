@@ -8,7 +8,7 @@ remove the prefix, special characters from item_id match the stripped Supplier p
 
 
 
-18-12-2024 discussion:
+18-12-2024 discussion: 
 
 - once a week - friday /saturday
 - check the latest pricebook 
