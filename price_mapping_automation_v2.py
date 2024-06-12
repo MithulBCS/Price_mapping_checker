@@ -398,4 +398,14 @@ if __name__ == "__main__":
     mapper = PBmapper()
     P21_files = mapper.main(folder_path, company_json_path)
 
+    config_file = "D:\\Price_mapping_Automation\\config_file.json"
+
+    with open(config_file, "r+") as cnf:
+        cnfdata = json.load(cnf)
+
+    for file in P21_files:
+        cnfdata["P21_files"].append(file)
+
+    with open(config_file, "w") as cnf:
+        json.dump(cnfdata, cnf, indent=4)
 
