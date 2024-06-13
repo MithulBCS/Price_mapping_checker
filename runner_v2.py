@@ -6,9 +6,7 @@ import argparse, sys
 import logging
 import os
 import json
-
-
-# include the smtp for mailing
+import mailer
 
 
 dbname = 'BCS_items'
@@ -25,7 +23,7 @@ year = current_time.year
 
 
 table_name = "P21_companyreview"  # Replace with the actual table name
-output_file = f"Price_matching_report_{day}_{month}_{year}.csv"  # Replace with the dedicated file path 
+output_file = f"D:\\Discrepancy files\\Price_matching_report_{day}_{month}_{year}.csv"  # Replace with the dedicated file path 
 
 
 def runner_main(folder_path, company_json_path):
@@ -59,13 +57,22 @@ def runner_main(folder_path, company_json_path):
 
     # database table name and output file name
     table_name = "P21_companyreview"
-    output_file = f"D:\\Discrepancy files\\Price matching report {day}-{month}-{year}"
+    output_file = f"D:\\Discrepancy files\\Discrepancies - Price matching report {day}-{month}-{year}"
 
 
     conn = pgs.connect_to_postgres(dbname, user, password, host, port)
     pgs.read_data_into_table(conn, P21_files)
     pgs.export_table_to_csv(conn, table_name, output_file)
     conn.close()
+
+
+    # Send mails to the recipients with the attachments
+    mailresult = mailer.send_email(output_file)
+    
+    # give a final output
+    if mailresult == True:
+        print("Process fininshed. Mails have been sent with attachement!")
+        #logging.info("Process fininshed. Mails have been sent with attachement!")
 
 # get the inputs of the file paths and store it in the json file
 
