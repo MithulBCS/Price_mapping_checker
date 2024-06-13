@@ -61,4 +61,4 @@ The four parameters:
 - mail - to check if mail is needed to be sent with the discrepancy file (yes, no)
 
 <br>
-Execute this script with the master folder path (the folder has company specific folders inside which there are pricing and review files) and the json file having the finished list of companies.
+Execute this script with the master folder path (the folder has company specific folders inside which there are pricing and review files) and the json file having the finished list of companies. add the new loop and mail checks with thier necessesities.
