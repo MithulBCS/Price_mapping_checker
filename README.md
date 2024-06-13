@@ -40,3 +40,25 @@ The two files:
 
 <br>
 Execute this script with the master folder path (the folder has company specific folders inside which there are pricing and review files) and the json file having the finished list of companies.
+
+<br> 
+ 
+<br> 
+
+#### Explanation v2:
+```
+python runner_v2.py --folder_path "" --company_json_path "" --new_loop "" --mail ""
+
+```
+
+
+This is for the runner_v2 script. 
+
+The four parameters:
+- folder_path
+- company_json_path
+- new_loop - to check if this is a rerun of a few companies already done or starting fresh (yes, no)
+- mail - to check if mail is needed to be sent with the discrepancy file (yes, no)
+
+<br>
+Execute this script with the master folder path (the folder has company specific folders inside which there are pricing and review files) and the json file having the finished list of companies.
