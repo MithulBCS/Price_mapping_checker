@@ -45,7 +45,7 @@ Execute this script with the master folder path (the folder has company specific
  
 <br> 
 
-#### Explanation v2:
+#### Explanation runner v2:
 ```
 python runner_v2.py --folder_path "" --company_json_path "" --new_loop "" --mail ""
 
